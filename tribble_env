@@ -1,0 +1,16 @@
+# UNSET TRIBBLE ENVS
+unset TRIBBLE_SECURE
+unset TRIBBLE_URL
+unset TRIBBLE_USERNAME
+unset TRIBBLE_KEY
+unset TRIBBLE_PASSWORD
+unset TRIBBLE_VERSION
+unset TRIBBLE_DEBUG
+
+# SET COMMON TRIBBLE ENVS
+export TRIBBLE_SECURE=False
+export TRIBBLE_URL=https://localhost:5150
+export TRIBBLE_USERNAME=username
+export TRIBBLE_KEY=user_key
+export TRIBBLE_PASSWORD=user_password
+
