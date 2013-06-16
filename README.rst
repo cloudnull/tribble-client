@@ -75,4 +75,41 @@ Here is some Basic Usage
     | security_groups | default                              |
     | quantity        | 2                                    |
     +-----------------+--------------------------------------+
-    
+
+
+* All available Tribble Client CLI Options
+
+.. code-block:: bash
+
+    usage: tribbleclient.local.py
+
+    optional arguments:
+      -h, --help                   show this help message and exit
+      -I, --insecure               Access the API in Insecure Mode
+      -U [URL], --url [URL]        Url for Tribble API
+      --version [VERSION]          Version of Tribble API
+      -u USERNAME, --username USERNAME
+                                   Username
+      -k KEY, --key KEY            Decryption Key
+      -p PASSWORD, --password PASSWORD
+                               Password For User
+
+    Tribble API interactions:
+      <Commands>
+
+        schematic-delete           Delete a Schematic and all Zones
+        schematic-redeploy         Redeploy a Schematic and all Assosiated Zones
+        schematic-list             List all schematics
+        schematic-create           Create a schematic, Note that not all options
+                                   are required. IE the config management stuff,
+                                   you can PUT that in on an update.
+        schematic-update           Update an existing schematic
+        config-update              Update Config Manager for a schematic
+        zone-delete                Delete a Zone
+        zone-redeploy              Redeploy a Zone
+        zone-list                  List all Zones
+        zone-create                Create a Zone
+        zone-update                update an existing Zone
+        instance_key               Update Your Instances Keys For a Zone
+
+    2013 All Rights Reserved
