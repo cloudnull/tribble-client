@@ -30,7 +30,7 @@ Here is some Basic Usage
 
 .. code-block:: bash
 
-    tribble schematic-list --sid 68ea1dd2-541c-40e8-a6c0-b9e2da9acc27
+    $ tribble schematic-list --sid 68ea1dd2-541c-40e8-a6c0-b9e2da9acc27
     +----------------+--------------------------------------+
     | Keys           | Values                               |
     +----------------+--------------------------------------+
@@ -52,7 +52,7 @@ Here is some Basic Usage
 
 .. code-block:: bash
 
-    tribble zone-list --sid 68ea1dd2-541c-40e8-a6c0-b9e2da9acc27 --zid 437a9206-7a8d-48f6-9c6c-d6495e34fca3
+    $ tribble zone-list --sid 68ea1dd2-541c-40e8-a6c0-b9e2da9acc27 --zid 437a9206-7a8d-48f6-9c6c-d6495e34fca3
     +-----------------+--------------------------------------+
     | Keys            | Values                               |
     +-----------------+--------------------------------------+
@@ -81,7 +81,8 @@ Here is some Basic Usage
 
 .. code-block:: bash
 
-    usage: tribbleclient.local.py
+    $ tribble --help
+    usage: tribble
 
     optional arguments:
       -h, --help                   show this help message and exit
@@ -113,3 +114,4 @@ Here is some Basic Usage
         instance_key               Update Your Instances Keys For a Zone
 
     2013 All Rights Reserved
+
