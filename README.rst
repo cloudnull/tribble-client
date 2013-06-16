@@ -93,7 +93,7 @@ Here is some Basic Usage
                                    Username
       -k KEY, --key KEY            Decryption Key
       -p PASSWORD, --password PASSWORD
-                               Password For User
+                                   Password For User
 
     Tribble API interactions:
       <Commands>
