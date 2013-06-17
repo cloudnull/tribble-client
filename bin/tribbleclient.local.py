@@ -10,5 +10,5 @@ if os.path.exists(os.path.join(possible_topdir,
                                '__init__.py')):
     sys.path.insert(0, possible_topdir)
 
-from tribbleclient import exectuable
-exectuable.execute()
+from tribbleclient import executable
+executable.execute()
