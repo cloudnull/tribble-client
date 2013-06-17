@@ -2,7 +2,7 @@ import requests
 import json
 
 # Local Packages
-from tribbleclient import arguments, check_args
+from tribbleclient import arguments, check_args, rand_string
 from tribbleclient import create_table, create_table_vert, openfile, remove_none
 
 
@@ -162,6 +162,8 @@ class Operations(object):
     def post_zone(self, **kwargs):
         sid = kwargs.get('sid')
         endpoint = '%s/schematics/%s/zones' % (self.api, sid)
+        if not 'zone_name' in kwargs:
+            kwargs['zone_name'] = rand_string()
         json_d = self.add_zon_data(data=kwargs)
         zargs = {'zones': [json_d]}
         data = self.make_request(uri=endpoint, method='POST', jdata=zargs)
@@ -198,8 +200,7 @@ class Operations(object):
         endpoint = '%s/schematics/%s/zones/%s' % (self.api, sid, zid)
         json_d = self.add_zon_data(data=kwargs)
         jargs = remove_none(update=json_d)
-        zargs = {'zones': [jargs]}
-        data = self.make_request(uri=endpoint, method='PUT', jdata=zargs)
+        data = self.make_request(uri=endpoint, method='PUT', jdata=jargs)
         return data
 
     def get_zones(self, sid, zid=None, instances=False):

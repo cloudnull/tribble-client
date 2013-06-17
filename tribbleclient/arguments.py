@@ -114,7 +114,7 @@ def arguments():
                            help='File Location of Cloud INIT script')
     zone_info.add_argument('--zone-name',
                            required=False,
-                           default=rand_string(),
+                           default=None,
                            metavar='[NAME]',
                            help='Name of the Zone')
     zone_info.add_argument('--size-id',
