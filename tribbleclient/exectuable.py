@@ -2,8 +2,8 @@ import requests
 import json
 
 # Local Packages
-from tribbleclient import arguments, check_args, rand_string
-from tribbleclient import create_table, create_table_vert, openfile, remove_none
+from tribbleclient import arguments, check_args, rand_string, remove_none
+from tribbleclient import create_table, create_table_vert, openfile
 
 
 class MethodNotAllowed(Exception):
