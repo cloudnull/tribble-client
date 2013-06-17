@@ -2,7 +2,7 @@
 
 import setuptools
 import sys
-from tribble import info
+from tribbleclient import info
 
 # Check the version of Python that we have been told to use
 if sys.version_info < (2, 6, 0):
