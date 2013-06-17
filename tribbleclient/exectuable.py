@@ -162,7 +162,7 @@ class Operations(object):
     def post_zone(self, **kwargs):
         sid = kwargs.get('sid')
         endpoint = '%s/schematics/%s/zones' % (self.api, sid)
-        if not 'zone_name' in kwargs:
+        if not 'zone_name' in kwargs or kwargs['zone_name'] is None:
             kwargs['zone_name'] = rand_string()
         json_d = self.add_zon_data(data=kwargs)
         zargs = {'zones': [json_d]}
