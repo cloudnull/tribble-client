@@ -1,7 +1,7 @@
 import os
 import argparse
 import sys
-from tribbleclient import info, rand_string
+from tribbleclient import info
 
 
 class NoKnownMethod(Exception):
@@ -273,14 +273,16 @@ def arguments():
                                                   ' that not all options are'
                                                   ' required. IE the config'
                                                   ' management stuff, you can'
-                                                  ' PUT that in on an update.'))
+                                                  ' PUT that in on an'
+                                                  ' update.'))
     schematic_create.set_defaults(schematic_create=True)
     schematic_update = subparser.add_parser('schematic-update',
                                             parents=[source_args,
                                                      schematic_info,
                                                      schematic_id,
                                                      config_info],
-                                            help='Update an existing schematic')
+                                            help=('Update an existing'
+                                                  ' schematic'))
     schematic_update.set_defaults(schematic_update=True)
     config_update = subparser.add_parser('config-update',
                                          parents=[source_args,
