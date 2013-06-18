@@ -73,11 +73,11 @@ def check_args(args):
             sys.exit('To create a schematic you need [--cloud-username]')
         elif not args.get('cloud_provider'):
             sys.exit('To create a schematic you need [--cloud-provider]')
-        elif not args.get('cloud_region'):
-            sys.exit('To create a schematic you need [--cloud-region]')
     elif args.get('zone_create'):
         if not args.get('name_convention'):
             sys.exit('To create a Zone you need [--name-convention]')
+        elif not args.get('cloud_region'):
+            sys.exit('To create a Zone you need [--cloud-region]')
         if not args.get('size_id'):
             sys.exit('To create a Zone you need [--size-id]')
         if not args.get('image_id'):
