@@ -8,7 +8,8 @@ from tribbleclient import info
 if sys.version_info < (2, 6, 0):
     sys.stderr.write('The Tribble System Presently requires'
                      ' Python 2.6.0 or greater\n')
-    sys.exit('\nUpgrade python because your version of it is VERY deprecated\n')
+    sys.exit('\nUpgrade python because your version of it is '
+             ' VERY deprecated\n')
 
 with open('README') as r_file:
     long_description = r_file.read()
@@ -35,10 +36,8 @@ setuptools.setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Utilities',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        ],
+        'Topic :: Software Development :: Libraries :: Python Modules'],
     entry_points={
-        "console_scripts":
-            ["tribble = tribbleclient.executable:execute"]
+        "console_scripts": ["tribble = tribbleclient.executable:execute"]
     }
 )
