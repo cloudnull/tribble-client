@@ -60,6 +60,13 @@ def arguments():
                              default=os.environ.get('TRIBBLE_DEBUG'),
                              help='Password For User')
 
+    instance_id = argparse.ArgumentParser(add_help=False)
+    instance_id.add_argument('--iid',
+                             required=False,
+                             default=None,
+                             metavar='[UUID]',
+                             help='UUID of Instance, "instance_id"')
+
     zone_id = argparse.ArgumentParser(add_help=False)
     zone_id.add_argument('--zid',
                          required=False,
@@ -326,7 +333,14 @@ def arguments():
                                                 instances_keys],
                                        help='update an existing Zone')
     zone_update.set_defaults(zone_update=True)
-    instance_key = subparser.add_parser('instance_key',
+    instance_delete = subparser.add_parser('instance-delete',
+                                           parents=[source_args,
+                                                    schematic_id,
+                                                    zone_id,
+                                                    instance_id],
+                                           help=('Delete a Single Instance'))
+    instance_delete.set_defaults(instance_delete=True)
+    instance_key = subparser.add_parser('instance-key',
                                         parents=[source_args,
                                                  schematic_id,
                                                  zone_id,

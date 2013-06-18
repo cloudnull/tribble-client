@@ -85,7 +85,10 @@ def check_args(args):
         if not args.get('quantity'):
             sys.exit('To create a Zone you need [--quantity]')
     elif any([args.get('instance_key'),
+              args.get('instance_delete'),
               args.get('zone_delete'),
               args.get('zone_redeploy')]) and not all([args.get('sid'),
                                                        args.get('zid')]):
         sys.exit('This action requires [--sid] and [--zid]')
+        if args.get('instance_delete') and not args.get('iid'):
+            sys.exit('This action requires [--iid]')

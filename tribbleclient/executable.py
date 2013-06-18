@@ -50,6 +50,8 @@ def execute():
         print _op.put_zone(**args)
     elif args.get('instance_key') is True:
         print _op.put_instance_key(**args)
+    elif args.get('instance_delete') is True:
+        print _op.delete_instance(**args)
 
 
 class Operations(object):
@@ -136,6 +138,17 @@ class Operations(object):
         sid = kwargs.get('sid')
         zid = kwargs.get('zid')
         endpoint = '%s/schematics/%s/zones/%s' % (self.api, sid, zid)
+        data = self.make_request(uri=endpoint, method='DELETE')
+        return data
+
+    def delete_instance(self, **kwargs):
+        sid = kwargs.get('sid')
+        zid = kwargs.get('zid')
+        iid = kwargs.get('iid')
+        endpoint = '%s/schematics/%s/zones/%s/instances/%s' % (self.api,
+                                                               sid,
+                                                               zid,
+                                                               iid)
         data = self.make_request(uri=endpoint, method='DELETE')
         return data
 
