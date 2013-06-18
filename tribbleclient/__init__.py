@@ -87,5 +87,5 @@ def check_args(args):
     elif any([args.get('instance_key'),
               args.get('zone_delete'),
               args.get('zone_redeploy')]) and not all([args.get('sid'),
-                                                     args.get('zid')]):
+                                                       args.get('zid')]):
         sys.exit('This action requires [--sid] and [--zid]')
