@@ -84,7 +84,6 @@ class Operations(object):
                   'key_name': data.get('key_name')}
         return j_data
 
-
     def add_skm_data(self, data):
         cvk = openfile(data.get('config_validation_key'))
         _ck = openfile(data.get('config_key'))
