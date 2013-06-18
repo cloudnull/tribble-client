@@ -69,9 +69,9 @@ class Operations(object):
         key = openfile(data.get('ssh_key_pub'))
         j_data = {'config_runlist': data.get('config_runlist'),
                   'config_env': data.get('config_env'),
-                  'config_script': data.get('config_script'),
+                  'config_script': _cs,
                   'security_groups': data.get('security_groups'),
-                  'inject_files': data.get('inject_files'),
+                  'inject_files': _if,
                   'cloud_networks': data.get('cloud_networks'),
                   'cloud_init': data.get('cloud_init'),
                   'zone_name': data.get('zone_name'),
