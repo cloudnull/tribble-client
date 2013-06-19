@@ -227,7 +227,12 @@ class Operations(object):
             if zid:
                 return create_table_vert(data=data)
             else:
-                return create_table(data=data)
+                pdata = [{'zone_state': dt.pop('zone_state'),
+                          'zone_name': dt.pop('zone_name'),
+                          'cloud_region': dt.pop('cloud_region'),
+                          'zone_msg': dt.pop('zone_msg'),
+                          'id': dt.pop('id')} for dt in data]
+                return create_table(data=pdata)
 
     def get_schematics(self, sid=None, config=False):
         endpoint = '%s/schematics' % self.api
@@ -243,4 +248,7 @@ class Operations(object):
             if sid:
                 return create_table_vert(data=data)
             else:
-                return create_table(data=data)
+                pdata = [{'cloud_provider': dt.pop('cloud_provider'),
+                          'cloud_username': dt.pop('cloud_username'),
+                          'id': dt.pop('id')} for dt in data]
+                return create_table(data=pdata)
