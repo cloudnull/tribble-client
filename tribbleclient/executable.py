@@ -25,7 +25,7 @@ def execute():
     )
 
     action = getattr(operations, args.get('method'))
-    action(args)
+    print(action(**args))
 
 
 class Operations(object):
@@ -92,19 +92,22 @@ class Operations(object):
             'PUT': sess.put
         }
         if method in ('GET', 'DELETE', 'POST') and jdata is None:
-            data = methods[method]
-            data(url=uri, verify=self.secure)
+            _data = methods[method]
+            data = _data(url=uri, verify=self.secure)
         elif method in ('POST', 'PUT') and jdata:
-            data = methods[method]
-            data(url=uri, data=json.dumps(jdata), verify=self.secure)
+            _data = methods[method]
+            data = _data(url=uri, data=json.dumps(jdata), verify=self.secure)
         else:
             raise tribbleclient.MethodNotAllowed('Unknown Method')
+
         if self.debug:
             print data.headers
             print data.url
             print data.text
+
         if data:
-            data = json.loads(data.content).get('response')
+            return json.loads(data.content).get('response')
+
         return data
 
     def schematic_delete(self, **kwargs):
@@ -181,60 +184,79 @@ class Operations(object):
         data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
         return data
 
+    def zone_show(self, **kwargs):
+        _instances = kwargs.get('instances')
+        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint)
+        if not data:
+            return 'No zone found'
+
+        if _instances is True:
+            instances = [
+                i.pop('instances') for i in data if 'instances' in _instances
+            ]
+            return utils.create_table(data=instances[0])
+        else:
+            return utils.create_table_vert(data=[data])
+
     def zone_list(self, **kwargs):
         path = 'schematics/%(sid)s/zones' % kwargs
         endpoint = '%s/%s' % (self.api, path)
-        instances = kwargs.get('instances')
+        _instances = kwargs.get('instances')
 
         zid = kwargs.get('zid')
         if zid:
             endpoint = '%s/%s' % (endpoint, kwargs['zid'])
 
         data = self.make_request(uri=endpoint)
-        instances = [
-            ins.pop('instances') for ins in data if 'instances' in instances
-        ]
+        if not data:
+            return 'No zone found to list'
 
-        if instances is True and kwargs.get('zid') and instances:
-            return utils.create_table(data=instances[0])
-        elif data:
+        if _instances is True:
+            instances = [
+                i.pop('instances') for i in data if 'instances' in _instances
+            ]
             if zid:
-                return utils.create_table_vert(data=data)
-            else:
-                pdata = []
-                for dt in data:
-                    pdata.append({
-                        'zone_state': dt.pop('zone_state'),
-                        'zone_name': dt.pop('zone_name'),
-                        'cloud_region': dt.pop('cloud_region'),
-                        'zone_msg': dt.pop('zone_msg'),
-                        'id': dt.pop('id')
-                    })
-                return utils.create_table(data=pdata)
+                return utils.create_table(data=instances[0])
+
+        if zid:
+            return utils.create_table_vert(data=data)
+        else:
+            pdata = []
+            for dt in data:
+                pdata.append({
+                    'zone_state': dt.pop('zone_state'),
+                    'zone_name': dt.pop('zone_name'),
+                    'cloud_region': dt.pop('cloud_region'),
+                    'zone_msg': dt.pop('zone_msg'),
+                    'id': dt.pop('id')
+                })
+            return utils.create_table(data=pdata)
+
+    def schematic_show(self, **kwargs):
+        config = kwargs.get('config_manager')
+        path = 'schematics/%(sid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint)
+        if config is True:
+            conf = [
+                con.pop('config_manager') for con in data
+                if 'config_manager' in con
+            ]
+            return utils.create_table_vert(data=conf)
+        else:
+            return utils.create_table_vert(data=[data])
 
     def schematic_list(self, **kwargs):
-        config = kwargs.get('config_manager')
-
         endpoint = '%s/schematics' % self.api
-        sid = kwargs.get('sid')
-        if sid:
-            endpoint = '%s/%s' % (endpoint, sid)
-
         data = self.make_request(uri=endpoint)
-        conf = [con.pop('config_manager') for con in data
-                if 'config_manager' in con]
-        if config is True and sid:
-            return utils.create_table_vert(data=conf)
-        elif data:
-            if sid:
-                return utils.create_table_vert(data=data)
-            else:
-                pdata = []
-                for dt in data:
-                    pdata_dict = {
-                        'cloud_provider': dt.pop('cloud_provider'),
-                        'cloud_username': dt.pop('cloud_username'),
-                        'id': dt.pop('id')
-                    }
-                    pdata.append(pdata_dict)
-                return utils.create_table(data=pdata)
+        pdata = []
+        for dt in data:
+            pdata_dict = {
+                'cloud_provider': dt.pop('cloud_provider'),
+                'cloud_username': dt.pop('cloud_username'),
+                'id': dt.pop('id')
+            }
+            pdata.append(pdata_dict)
+        return utils.create_table(data=pdata)

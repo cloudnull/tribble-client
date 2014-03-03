@@ -9,6 +9,7 @@
 # =============================================================================
 import sys
 
+from tribbleclient.arguments import utils
 from tribbleclient.arguments import default_args
 from tribbleclient.arguments import arguments as core_args
 
@@ -42,9 +43,15 @@ def run_parser():
     )
     schematic_redeploy.set_defaults(method='schematic_redeploy')
 
+    schematic_show = subparser.add_parser(
+        'schematic-show',
+        parents=[schematic_id, conf_manager],
+        help='Show a schematics'
+    )
+    schematic_show.set_defaults(method='schematic_show')
+
     schematic_list = subparser.add_parser(
         'schematic-list',
-        parents=[schematic_id, conf_manager],
         help='List all schematics'
     )
     schematic_list.set_defaults(method='schematic_list')
@@ -87,9 +94,16 @@ def run_parser():
     )
     zone_redeploy.set_defaults(method='zone_redeploy')
 
+    zone_show = subparser.add_parser(
+        'zone-show',
+        parents=[schematic_id, zone_id, show_instances],
+        help='List all Zones'
+    )
+    zone_show.set_defaults(method='zone_show')
+
     zone_list = subparser.add_parser(
         'zone-list',
-        parents=[schematic_id, zone_id, show_instances],
+        parents=[schematic_id],
         help='List all Zones'
     )
     zone_list.set_defaults(method='zone_list')
@@ -131,4 +145,5 @@ def run_parser():
         # Parse the Arguments that have been provided
         args = parser.parse_args()
         # Change Arguments in to a Dictionary
-        return vars(args)
+        parsed_args = vars(args)
+        return utils.check_args(args=parsed_args)

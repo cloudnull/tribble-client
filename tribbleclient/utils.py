@@ -31,12 +31,12 @@ def openfile(file_loc=None):
 
 def create_table_vert(data):
     table = None
-    for _dt in data:
+    for _data in data:
         table = prettytable.PrettyTable()
-        table.add_column('Keys', _dt.keys())
-        table.add_column('Values', _dt.values())
+        table.add_column('Keys', _data.keys())
+        table.add_column('Values', _data.values())
     if table is None:
-        raise tribbleclient.ApplicationFailure('No Table to show data.')
+        return 'No data available to show'
     table.align['Keys'] = 'l'
     table.align['Values'] = 'l'
     return table
