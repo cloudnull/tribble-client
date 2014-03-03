@@ -1,11 +1,9 @@
 import os
 import argparse
 import sys
+
+import tribbleclient
 from tribbleclient import info
-
-
-class NoKnownMethod(Exception):
-    pass
 
 
 def arguments():
@@ -351,8 +349,7 @@ def arguments():
 
     if len(sys.argv) == 1:
         parser.print_help()
-        sys.exit('\n----------------------------------------\n'
-                 'Give me something to do and I will do it\n')
+        sys.exit('\nGive me something to do and I will do it...\n')
     else:
         # Parse the Arguments that have been provided
         args = parser.parse_args()
