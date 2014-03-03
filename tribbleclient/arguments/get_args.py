@@ -58,7 +58,7 @@ def run_parser():
 
     schematic_create = subparser.add_parser(
         'schematic-create',
-        parents=[schematic_info, schematic_id, config_info],
+        parents=[schematic_info, config_info],
         help=(
             'Create a schematic, Note that not all options are required. IE'
             ' the config management stuff, you can PUT that in on an update.'

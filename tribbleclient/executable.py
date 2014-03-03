@@ -270,8 +270,14 @@ class Operations(object):
     def schematic_update(self, **kwargs):
         path = 'schematics/%(sid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
-        json_data = self.add_skm_data(data=kwargs)
+        data = self.make_request(uri=endpoint)
+        if not data:
+            return json.loads(data.text).get('response')
+
+        data.update(kwargs)
+        json_data = self.add_skm_data(data=data)
         data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
+
         if not data:
             return json.loads(data.text).get('response')
 
