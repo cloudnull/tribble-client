@@ -110,40 +110,51 @@ class Operations(object):
 
         return data
 
-    def schematic_delete(self, **kwargs):
-        path = 'schematics/%(sid)s' % kwargs
-        endpoint = '%s/%s' % (self.api, path)
-        data = self.make_request(uri=endpoint, method='DELETE')
-        return data
-
-    def zone_delete(self, **kwargs):
-        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
-        endpoint = '%s/%s' % (self.api, path)
-        data = self.make_request(uri=endpoint, method='DELETE')
-        return data
-
     def instance_delete(self, **kwargs):
         path = 'schematics/%(sid)s/zones/%(zid)s/instances/%(iid)s'
         endpoint = '%s/%s' % (self.api, path)
         data = self.make_request(uri=endpoint, method='DELETE')
+        if not data:
+            return json.loads(data.text).get('response')
+
         return data
 
-    def schematic_redeploy(self, **kwargs):
-        path = 'schematics/%(sid)s/redeploy' % kwargs
+    def instance_key(self, **kwargs):
+        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
-        data = self.make_request(uri=endpoint, method='POST')
+        json_data = self.add_zon_data(data=kwargs)
+        data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
+        if not data:
+            return json.loads(data.text).get('response')
+
+        return data
+
+    def config_update(self, **kwargs):
+        path = 'schematics/%(sid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        json_data = self.add_skm_data(data=kwargs)
+        data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
+        if not data:
+            return json.loads(data.text).get('response')
+
         return data
 
     def zone_redeploy(self, **kwargs):
         path = 'schematics/%(sid)s/zones/%(zid)s/redeploy' % kwargs
         endpoint = '%s/%s' % (self.api, path)
         data = self.make_request(uri=endpoint, method='POST')
+        if not data:
+            return json.loads(data.text).get('response')
+
         return data
 
-    def schematic_create(self, **kwargs):
-        endpoint = '%s/schematics' % self.api
-        json_data = self.add_skm_data(data=kwargs)
-        data = self.make_request(uri=endpoint, method='POST', jdata=json_data)
+    def zone_delete(self, **kwargs):
+        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint, method='DELETE')
+        if not data:
+            return json.loads(data.text).get('response')
+
         return data
 
     def zone_create(self, **kwargs):
@@ -154,27 +165,9 @@ class Operations(object):
         json_data = self.add_zon_data(data=kwargs)
         zargs = {'zones': [json_data]}
         data = self.make_request(uri=endpoint, method='POST', jdata=zargs)
-        return data
+        if not data:
+            return json.loads(data.text).get('response')
 
-    def schematic_update(self, **kwargs):
-        path = 'schematics/%(sid)s' % kwargs
-        endpoint = '%s/%s' % (self.api, path)
-        json_data = self.add_skm_data(data=kwargs)
-        data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
-        return data
-
-    def instance_key(self, **kwargs):
-        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
-        endpoint = '%s/%s' % (self.api, path)
-        json_data = self.add_zon_data(data=kwargs)
-        data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
-        return data
-
-    def config_update(self, **kwargs):
-        path = 'schematics/%(sid)s' % kwargs
-        endpoint = '%s/%s' % (self.api, path)
-        json_data = self.add_skm_data(data=kwargs)
-        data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
         return data
 
     def zone_update(self, **kwargs):
@@ -182,6 +175,9 @@ class Operations(object):
         endpoint = '%s/%s' % (self.api, path)
         json_data = self.add_zon_data(data=kwargs)
         data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
+        if not data:
+            return json.loads(data.text).get('response')
+
         return data
 
     def zone_show(self, **kwargs):
@@ -190,7 +186,7 @@ class Operations(object):
         endpoint = '%s/%s' % (self.api, path)
         data = self.make_request(uri=endpoint)
         if not data:
-            return 'No zone found'
+            return json.loads(data.text).get('response')
 
         if _instances is True:
             instances = [
@@ -203,42 +199,30 @@ class Operations(object):
     def zone_list(self, **kwargs):
         path = 'schematics/%(sid)s/zones' % kwargs
         endpoint = '%s/%s' % (self.api, path)
-        _instances = kwargs.get('instances')
-
-        zid = kwargs.get('zid')
-        if zid:
-            endpoint = '%s/%s' % (endpoint, kwargs['zid'])
-
         data = self.make_request(uri=endpoint)
         if not data:
-            return 'No zone found to list'
+            return json.loads(data.text).get('response')
 
-        if _instances is True:
-            instances = [
-                i.pop('instances') for i in data if 'instances' in _instances
-            ]
-            if zid:
-                return utils.create_table(data=instances[0])
+        pdata = []
+        for dt in data:
+            pdata.append({
+                'zone_state': dt.pop('zone_state'),
+                'zone_name': dt.pop('zone_name'),
+                'cloud_region': dt.pop('cloud_region'),
+                'zone_msg': dt.pop('zone_msg'),
+                'id': dt.pop('id')
+            })
 
-        if zid:
-            return utils.create_table_vert(data=data)
-        else:
-            pdata = []
-            for dt in data:
-                pdata.append({
-                    'zone_state': dt.pop('zone_state'),
-                    'zone_name': dt.pop('zone_name'),
-                    'cloud_region': dt.pop('cloud_region'),
-                    'zone_msg': dt.pop('zone_msg'),
-                    'id': dt.pop('id')
-                })
-            return utils.create_table(data=pdata)
+        return utils.create_table(data=pdata)
 
     def schematic_show(self, **kwargs):
         config = kwargs.get('config_manager')
         path = 'schematics/%(sid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
         data = self.make_request(uri=endpoint)
+        if not data:
+            return json.loads(data.text).get('response')
+
         if config is True:
             conf = [
                 con.pop('config_manager') for con in data
@@ -251,6 +235,9 @@ class Operations(object):
     def schematic_list(self, **kwargs):
         endpoint = '%s/schematics' % self.api
         data = self.make_request(uri=endpoint)
+        if not data:
+            return json.loads(data.text).get('response')
+
         pdata = []
         for dt in data:
             pdata_dict = {
@@ -259,4 +246,42 @@ class Operations(object):
                 'id': dt.pop('id')
             }
             pdata.append(pdata_dict)
+
         return utils.create_table(data=pdata)
+
+    def schematic_redeploy(self, **kwargs):
+        path = 'schematics/%(sid)s/redeploy' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint, method='POST')
+        if not data:
+            return json.loads(data.text).get('response')
+
+        return data
+
+    def schematic_create(self, **kwargs):
+        endpoint = '%s/schematics' % self.api
+        json_data = self.add_skm_data(data=kwargs)
+        data = self.make_request(uri=endpoint, method='POST', jdata=json_data)
+        if not data:
+            return json.loads(data.text).get('response')
+
+        return data
+
+    def schematic_update(self, **kwargs):
+        path = 'schematics/%(sid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        json_data = self.add_skm_data(data=kwargs)
+        data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
+        if not data:
+            return json.loads(data.text).get('response')
+
+        return data
+
+    def schematic_delete(self, **kwargs):
+        path = 'schematics/%(sid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint, method='DELETE')
+        if not data:
+            return json.loads(data.text).get('response')
+
+        return data

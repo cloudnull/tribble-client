@@ -30,13 +30,18 @@ def openfile(file_loc=None):
 
 
 def create_table_vert(data):
+    if data is None:
+        return 'No data available to show'
+
     table = None
     for _data in data:
         table = prettytable.PrettyTable()
         table.add_column('Keys', _data.keys())
         table.add_column('Values', _data.values())
+
     if table is None:
         return 'No data available to show'
+
     table.align['Keys'] = 'l'
     table.align['Values'] = 'l'
     return table
