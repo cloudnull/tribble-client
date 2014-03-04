@@ -1,0 +1,16 @@
+# Example Sources File
+
+# Auth URL to the cloud URL
+export TRIBBLE_URL=""
+
+# Version of the Cloud Provider
+export TRIBBLE_VERSION="v1"
+
+# Tribble Username
+export TRIBBLE_USERNAME="TribbleUsername"
+
+# Tribble Key
+export TRIBBLE_KEY="TribbleKey"
+
+# Tribble Password
+export TRIBBLE_PASSWORD="TribblePassword"

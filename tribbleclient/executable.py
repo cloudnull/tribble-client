@@ -39,47 +39,94 @@ class Operations(object):
         else:
             self.secure = False
 
-    def add_zon_data(self, data):
-        script = utils.openfile(data.get('config_script'))
-        inject_files = utils.openfile(data.get('inject_files'))
-        key = utils.openfile(data.get('ssh_key_pub'))
-        j_data = {
-            'config_runlist': data.get('config_runlist'),
-            'config_env': data.get('config_env'),
-            'config_script': script,
-            'security_groups': data.get('security_groups'),
-            'inject_files': inject_files,
-            'cloud_networks': data.get('cloud_networks'),
-            'cloud_init': data.get('cloud_init'),
-            'cloud_region': data.get('cloud_region'),
-            'zone_name': data.get('zone_name'),
-            'size_id': data.get('size_id'),
-            'image_id': data.get('image_id'),
-            'name_convention': data.get('name_convention'),
-            'quantity': data.get('quantity'),
-            'ssh_user': data.get('ssh_user', 'root'),
-            'ssh_key_pub': key,
-            'key_name': data.get('key_name')
-        }
+    @staticmethod
+    def add_zon_data(data, update=False):
+        def _script():
+            return utils.openfile(data.get('config_script'))
+
+        def _inject_files():
+            return utils.openfile(data.get('inject_files'))
+
+        def _keys():
+            return utils.openfile(data.get('ssh_key_pub'))
+
+        def _j_data_update():
+            if option == 'config_script':
+                j_data[option] = _script()
+            elif option == 'inject_files':
+                j_data[option] = _inject_files()
+            elif option == 'ssh_key_pub':
+                j_data[option] = _keys()
+            else:
+                j_data[option] = data.get(option)
+
+        j_data = {}
+        all_options = [
+            'config_runlist',
+            'config_env',
+            'config_script',
+            'security_groups',
+            'inject_files',
+            'cloud_networks',
+            'cloud_init',
+            'cloud_region',
+            'zone_name',
+            'size_id',
+            'image_id',
+            'name_convention',
+            'quantity',
+            'ssh_user',
+            'ssh_key_pub',
+            'key_name',
+        ]
+
+        for option in all_options:
+            if update is False:
+                _j_data_update()
+            elif option in data:
+                _j_data_update()
+
         return j_data
 
-    def add_skm_data(self, data):
-        cvk = utils.openfile(data.get('config_validation_key'))
-        _ck = utils.openfile(data.get('config_key'))
-        j_data = {
-            'cloud_key': data.get('cloud_key'),
-            'cloud_url': data.get('cloud_url'),
-            'cloud_provider': data.get('cloud_provider'),
-            'cloud_version': data.get('cloud_version'),
-            'cloud_username': data.get('cloud_username'),
-            'cloud_tenant': data.get('cloud_tenant'),
-            'config_clientname': data.get('config_clientname'),
-            'config_key': _ck,
-            'config_server': data.get('config_server'),
-            'config_type': data.get('config_type'),
-            'config_username': data.get('config_username'),
-            'config_validation_key': cvk
-        }
+    @staticmethod
+    def add_skm_data(data, update=False):
+        def _cvk():
+            return utils.openfile(data.get('config_validation_key'))
+
+        def _ck():
+            return utils.openfile(data.get('config_key'))
+
+        def _j_data_update():
+            if option == 'config_validation_key':
+                j_data[option] = _cvk()
+            elif option == 'config_key':
+                j_data[option] = _ck()
+            else:
+                j_data[option] = data.get(option)
+
+        j_data = {}
+        all_options = [
+            'name',
+            'cloud_key',
+            'cloud_url',
+            'cloud_provider',
+            'cloud_version',
+            'cloud_username',
+            'cloud_tenant',
+            'config_clientname',
+            'config_key',
+            'config_server',
+            'config_type',
+            'config_username',
+            'config_validation_key'
+        ]
+
+        for option in all_options:
+            if update is False:
+                _j_data_update()
+            elif option in data:
+                _j_data_update()
+
         return j_data
 
     def make_request(self, uri, method='GET', jdata=None):
@@ -132,7 +179,7 @@ class Operations(object):
     def config_update(self, **kwargs):
         path = 'schematics/%(sid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
-        json_data = self.add_skm_data(data=kwargs)
+        json_data = self.add_skm_data(data=kwargs, update=True)
         data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
         if not data:
             return json.loads(data.text).get('response')
@@ -173,7 +220,7 @@ class Operations(object):
     def zone_update(self, **kwargs):
         path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
-        json_data = self.add_zon_data(data=kwargs)
+        json_data = self.add_zon_data(data=kwargs, update=True)
         data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
         if not data:
             return json.loads(data.text).get('response')
@@ -223,13 +270,11 @@ class Operations(object):
         if not data:
             return json.loads(data.text).get('response')
 
-        if config is True:
-            conf = [
-                con.pop('config_manager') for con in data
-                if 'config_manager' in con
-            ]
-            return utils.create_table_vert(data=conf)
+        if config:
+            config_data = data.pop('config_manager')
+            return utils.create_table_vert(data=[config_data])
         else:
+            data.pop('config_manager')
             return utils.create_table_vert(data=[data])
 
     def schematic_list(self, **kwargs):
@@ -241,9 +286,10 @@ class Operations(object):
         pdata = []
         for dt in data:
             pdata_dict = {
+                'id': dt.pop('id'),
+                'name': dt.pop('name'),
                 'cloud_provider': dt.pop('cloud_provider'),
-                'cloud_username': dt.pop('cloud_username'),
-                'id': dt.pop('id')
+                'cloud_username': dt.pop('cloud_username')
             }
             pdata.append(pdata_dict)
 
@@ -274,8 +320,7 @@ class Operations(object):
         if not data:
             return json.loads(data.text).get('response')
 
-        data.update(kwargs)
-        json_data = self.add_skm_data(data=data)
+        json_data = self.add_skm_data(data=kwargs, update=True)
         data = self.make_request(uri=endpoint, method='PUT', jdata=json_data)
 
         if not data:

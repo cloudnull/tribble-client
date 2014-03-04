@@ -20,7 +20,6 @@ def openfile(file_loc=None):
         return None
     else:
         try:
-            print file_loc.__class__
             with open(file_loc, 'rb') as _file:
                 data = _file.read()
         except IOError:

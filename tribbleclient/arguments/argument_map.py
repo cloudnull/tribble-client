@@ -9,10 +9,18 @@
 # =============================================================================
 
 ARGUMENT_MAP = {
-    'config_manager': {
-        'sid': {
+    'schematic_create': {
+        'cloud_key': {
             'required': True,
-            'error_msg': 'This action requires [--sid]'
+            'error_msg': 'To create a schematic you need [--cloud-key]'
+        },
+        'cloud_username': {
+            'required': True,
+            'error_msg': 'To create a schematic you need [--cloud-username]'
+        },
+        'cloud_provider': {
+            'required': True,
+            'error_msg': 'To create a schematic you need [--cloud-provider]'
         }
     },
     'schematic_delete': {
@@ -139,20 +147,6 @@ ARGUMENT_MAP = {
             'required': True,
             'error_msg': ('You can not get the Instances inforamtion with out'
                           ' providing a Zone ID, [--zid]')
-        }
-    },
-    'schematic_create': {
-        'cloud_key': {
-            'required': True,
-            'error_msg': 'To create a schematic you need [--cloud-key]'
-        },
-        'cloud_username': {
-            'required': True,
-            'error_msg': 'To create a schematic you need [--cloud-username]'
-        },
-        'cloud_provider': {
-            'required': True,
-            'error_msg': 'To create a schematic you need [--cloud-provider]'
         }
     }
 }

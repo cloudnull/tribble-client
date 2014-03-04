@@ -109,6 +109,13 @@ def zone_args():
         help='File Location of Cloud INIT script'
     )
     zone_info.add_argument(
+        '--cloud-region',
+        required=False,
+        default=None,
+        metavar='[REGION]',
+        help='Where we will be deploying your cloud'
+    )
+    zone_info.add_argument(
         '--zone-name',
         required=False,
         default=None,
@@ -223,6 +230,13 @@ def schematic_args():
         help='Unique Key for Cloud Access'
     )
     schematic_info.add_argument(
+        '--name',
+        required=False,
+        default=None,
+        metavar='[NAME]',
+        help='Add a name the schematic'
+    )
+    schematic_info.add_argument(
         '--cloud-username',
         required=False,
         default=None,
@@ -256,13 +270,6 @@ def schematic_args():
         default=None,
         metavar='[VERSION]',
         help='The Cloud API Version we will talk to'
-    )
-    schematic_info.add_argument(
-        '--cloud-region',
-        required=False,
-        default=None,
-        metavar='[REGION]',
-        help='Where we will be deploying your cloud'
     )
 
     return schematic_id, schematic_info

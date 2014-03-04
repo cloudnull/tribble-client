@@ -29,7 +29,7 @@ def default_args():
         '--insecure',
         required=False,
         action='store_true',
-        default=os.environ.get('TRIBBLE_SECURE', False),
+        default=False,
         help='Access the API in Insecure Mode'
     )
     parser.add_argument(
@@ -72,7 +72,7 @@ def default_args():
     parser.add_argument(
         '--debug',
         action='store_true',
-        default=os.environ.get('TRIBBLE_DEBUG'),
+        default=False,
         help='Password For User'
     )
 
