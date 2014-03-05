@@ -86,7 +86,7 @@ ARGUMENT_MAP = {
         },
         'zid': {
             'required': True,
-            'error_msg': ('You can not get the Instances inforamtion with out'
+            'error_msg': ('You can not get the Instances information with out'
                           ' providing a Zone ID, [--zid]')
         }
     },
@@ -97,7 +97,7 @@ ARGUMENT_MAP = {
         },
         'zid': {
             'required': True,
-            'error_msg': ('You can not get the Instances inforamtion with out'
+            'error_msg': ('You can not get the Instances information with out'
                           ' providing a Zone ID, [--zid]')
         }
     },
@@ -108,7 +108,7 @@ ARGUMENT_MAP = {
         },
         'zid': {
             'required': True,
-            'error_msg': ('You can not get the Instances inforamtion with out'
+            'error_msg': ('You can not get the Instances information with out'
                           ' providing a Zone ID, [--zid]')
         }
     },
@@ -119,7 +119,7 @@ ARGUMENT_MAP = {
         },
         'zid': {
             'required': True,
-            'error_msg': ('You can not get the Instances inforamtion with out'
+            'error_msg': ('You can not get the Instances information with out'
                           ' providing a Zone ID, [--zid]')
         },
         'iid': {
@@ -134,7 +134,7 @@ ARGUMENT_MAP = {
         },
         'zid': {
             'required': True,
-            'error_msg': ('You can not get the Instances inforamtion with out'
+            'error_msg': ('You can not get the Instances information with out'
                           ' providing a Zone ID, [--zid]')
         },
         'iid': {
@@ -142,10 +142,29 @@ ARGUMENT_MAP = {
             'error_msg': 'This action requires [--iid]'
         }
     },
-    'instances': {
+    'instance_show': {
+        'sid': {
+            'required': True,
+            'error_msg': 'This action requires [--sid]'
+        },
         'zid': {
             'required': True,
-            'error_msg': ('You can not get the Instances inforamtion with out'
+            'error_msg': ('You can not get the Instances information with out'
+                          ' providing a Zone ID, [--zid]')
+        },
+        'iid': {
+            'required': True,
+            'error_msg': 'This action requires [--iid]'
+        }
+    },
+    'instance_list': {
+        'sid': {
+            'required': True,
+            'error_msg': 'This action requires [--sid]'
+        },
+        'zid': {
+            'required': True,
+            'error_msg': ('You can not get the Instances information with out'
                           ' providing a Zone ID, [--zid]')
         }
     }

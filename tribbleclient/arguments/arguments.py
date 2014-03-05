@@ -12,15 +12,6 @@ def instance_args():
         help='UUID of Instance, "instance_id"'
     )
 
-    show_instances = argparse.ArgumentParser(add_help=False)
-    show_instances.add_argument(
-        '--instances',
-        required=False,
-        default=False,
-        action='store_true',
-        help='Display the Instance information for a provided Schematic'
-    )
-
     instances_keys = argparse.ArgumentParser(add_help=False)
     instances_keys.add_argument(
         '--ssh-user',
@@ -44,7 +35,7 @@ def instance_args():
         help='File Location of Public Key'
     )
 
-    return instance_id, show_instances, instances_keys
+    return instance_id, instances_keys
 
 
 def zone_args():

@@ -158,13 +158,65 @@ class Operations(object):
         return data
 
     def instance_delete(self, **kwargs):
-        path = 'schematics/%(sid)s/zones/%(zid)s/instances/%(iid)s'
+        path = 'schematics/%(sid)s/zones/%(zid)s/instances/%(iid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
         data = self.make_request(uri=endpoint, method='DELETE')
         if not data:
             return json.loads(data.text).get('response')
 
+        instances = data.get('instances')
+        if not instances:
+            return 'No Instance found to delete'
+
+        for instance in instances:
+            instance_check = [
+                kwargs['iid'] == instance.get('instance_id'),
+                kwargs['iid'] == instance.get('id'),
+            ]
+            if any(instance_check):
+                return utils.create_table_vert(data=[instance])
+
         return data
+
+    def instance_show(self, **kwargs):
+        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint)
+        if not data:
+            return json.loads(data.text).get('response')
+
+        instances = data.get('instances')
+        if not instances:
+            return 'No Instances Found'
+
+        for instance in instances:
+            instance_check = [
+                kwargs['iid'] == instance.get('instance_id'),
+                kwargs['iid'] == instance.get('id'),
+            ]
+            if any(instance_check):
+                return utils.create_table_vert(data=[instance])
+
+    def instance_list(self, **kwargs):
+        path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
+        endpoint = '%s/%s' % (self.api, path)
+        data = self.make_request(uri=endpoint)
+        if not data:
+            return json.loads(data.text).get('response')
+
+        instances = data.get('instances')
+        if not instances:
+            return 'No Instances Found'
+
+        return_instances = []
+        for instance in instances:
+            return_instances.append({
+                'id': instance.get('id'),
+                'instance_id': instance.get('instance_id'),
+                'server_name': instance.get('server_name')
+            })
+
+        return utils.create_table(data=return_instances)
 
     def instance_key(self, **kwargs):
         path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
@@ -228,19 +280,18 @@ class Operations(object):
         return data
 
     def zone_show(self, **kwargs):
-        _instances = kwargs.get('instances')
         path = 'schematics/%(sid)s/zones/%(zid)s' % kwargs
         endpoint = '%s/%s' % (self.api, path)
         data = self.make_request(uri=endpoint)
+
         if not data:
             return json.loads(data.text).get('response')
-
-        if _instances is True:
-            instances = [
-                i.pop('instances') for i in data if 'instances' in _instances
-            ]
-            return utils.create_table(data=instances[0])
         else:
+            instances = data.get('instances')
+            if instances:
+                data['instances'] = True
+            else:
+                data['instances'] = False
             return utils.create_table_vert(data=[data])
 
     def zone_list(self, **kwargs):
@@ -253,10 +304,10 @@ class Operations(object):
         pdata = []
         for dt in data:
             pdata.append({
-                'zone_state': dt.pop('zone_state'),
-                'zone_name': dt.pop('zone_name'),
-                'cloud_region': dt.pop('cloud_region'),
-                'zone_msg': dt.pop('zone_msg'),
+                'zone_state': dt.get('zone_state'),
+                'zone_name': dt.get('zone_name'),
+                'cloud_region': dt.get('cloud_region'),
+                'instance_quantity': dt.get('instance_quantity', 0),
                 'id': dt.pop('id')
             })
 

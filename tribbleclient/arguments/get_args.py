@@ -18,7 +18,7 @@ def run_parser():
     """Load all of the parsable Arguments."""
 
     parser = default_args.default_args()
-    instance_id, show_instances, instances_keys = core_args.instance_args()
+    instance_id, instances_keys = core_args.instance_args()
     zone_id, zone_info = core_args.zone_args()
     conf_manager, config_info = core_args.coniguration_args()
     schematic_id, schematic_info = core_args.schematic_args()
@@ -96,7 +96,7 @@ def run_parser():
 
     zone_show = subparser.add_parser(
         'zone-show',
-        parents=[schematic_id, zone_id, show_instances],
+        parents=[schematic_id, zone_id],
         help='List all Zones'
     )
     zone_show.set_defaults(method='zone_show')
@@ -123,6 +123,20 @@ def run_parser():
         help='update an existing Zone'
     )
     zone_update.set_defaults(method='zone_update')
+
+    instance_delete = subparser.add_parser(
+        'instance-list',
+        parents=[schematic_id, zone_id],
+        help='List all instances'
+    )
+    instance_delete.set_defaults(method='instance_list')
+
+    instance_delete = subparser.add_parser(
+        'instance-show',
+        parents=[schematic_id, zone_id, instance_id],
+        help='show information on a Single Instance'
+    )
+    instance_delete.set_defaults(method='instance_show')
 
     instance_delete = subparser.add_parser(
         'instance-delete',
